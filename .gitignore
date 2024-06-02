@@ -1,0 +1,37 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Spring Boot
+/target/
+
+# Intellij IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Logs
+*.log
+
+# Docker
+/docker-compose.yml
+/docker-compose.override.yml
+
+# Kubernetes
+/k8s/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
