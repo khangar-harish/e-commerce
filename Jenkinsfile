@@ -72,7 +72,8 @@ pipeline {
 
     post {
         always {
-            node {
+            agent any
+            steps {
                 cleanWs()
             }
         }
