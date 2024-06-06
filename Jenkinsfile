@@ -70,11 +70,9 @@ pipeline {
         }
     }
 
-     post {
-        always {
-            node('any') {
-                cleanWs()
-            }
-        }
-    }
+    //  post {
+    //     always {
+    //         cleanWs()
+    //     }
+    // }
 }
