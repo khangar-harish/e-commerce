@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKER_CREDENTIALS_ID = 'DockeHub'
         DOCKER_IMAGE = 'khanhash1992/e-commerce'
         KUBE_CONFIG = credentials('kubeconfig')
     }
