@@ -15,7 +15,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/khangar-harish/e-commerce.git'
+                git(
+                    url: 'https://github.com/khangar-harish/e-commerce.git',
+                    branch: 'main'
+                )
             }
         }
 
