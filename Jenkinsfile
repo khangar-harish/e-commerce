@@ -52,7 +52,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'DockeHub', variable: 'dockerpwd')]) {
-                        sh  'docker login -u khanhash1992 -p ${dockerpwd}'
+                        //sh  'docker login -u khanhash1992 -p ${dockerpwd}'
+                        sh 'echo $dockerpwd | docker login -u khanhash1992 --password-stdin'
                     }
                     def services = ['user-service', 'product-service', 'order-service']
                     for (service in services) {
