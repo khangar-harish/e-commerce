@@ -65,10 +65,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kube-config')]) {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
                         def services = ['user-service', 'product-service', 'order-service']
                         for (service in services) {
-                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=$KUBE_CONFIG"
+                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=$kubeconfig"
                         }
                     }
                     // def services = ['user-service', 'product-service', 'order-service']
