@@ -65,11 +65,19 @@ pipeline {
                     //     }
                     // }
 
-                    withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID) {
-                        def services = ['user-service', 'product-service', 'order-service']
-                        for (service in services) {
-                            sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                        }
+                    // withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID) {
+                    //     def services = ['user-service', 'product-service', 'order-service']
+                    //     for (service in services) {
+                    //         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
+                    //     }
+                    // }
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'pwd', usernameVariable: 'user')]) {
+                        sh 'echo ${pwd} | docker login -u ${user} --password-stdin'
+                    }
+                    def services = ['user-service', 'product-service', 'order-service']
+                    for (service in services) {
+                        sh "docker push ${DOCKER_IMAGE}-${service}:latest"
                     }
                 }
             }
