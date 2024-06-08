@@ -52,34 +52,12 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'DockeHub', variable: 'dockerpwd')]) {
-                        //sh  'docker login -u khanhash1992 -p ${dockerpwd}'
                         sh 'echo $dockerpwd | docker login -u khanhash1992 --password-stdin'
                     }
                     def services = ['user-service', 'product-service', 'order-service']
                     for (service in services) {
                         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
                     }
-
-                    // docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                    //     for (service in services) {
-                    //         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    //     }
-                    // }
-
-                    // withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID) {
-                    //     def services = ['user-service', 'product-service', 'order-service']
-                    //     for (service in services) {
-                    //         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    //     }
-                    // }
-
-                    // withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'pwd', usernameVariable: 'user')]) {
-                    //     sh 'echo ${pwd} | docker login -u ${user} --password-stdin'
-                    // }
-                    // def services = ['user-service', 'product-service', 'order-service']
-                    // for (service in services) {
-                    //     sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    // }
                 }
             }
         }
@@ -87,10 +65,16 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    def services = ['user-service', 'product-service', 'order-service']
-                    for (service in services) {
-                        sh "kubectl set image deployment/${service}-deployment ${service}=${DOCKER_IMAGE}-${service}:latest --kubeconfig=${KUBE_CONFIG}"
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kube-config')]) {
+                        def services = ['user-service', 'product-service', 'order-service']
+                        for (service in services) {
+                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=$KUBE_CONFIG"
+                        }
                     }
+                    // def services = ['user-service', 'product-service', 'order-service']
+                    // for (service in services) {
+                    //     sh "kubectl set image deployment/${service}-deployment ${service}=${DOCKER_IMAGE}-${service}:latest --kubeconfig=${KUBE_CONFIG}"
+                    // }
                 }
             }
         }
