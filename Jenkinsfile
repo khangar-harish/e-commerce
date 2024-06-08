@@ -51,7 +51,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'DockeHub', pvariable: 'dockerpwd', uvariable: 'user')]) {
+                    withCredentials([string(credentialsId: 'DockeHub', passwordVariable: 'dockerpwd', userVariable: 'user')]) {
                         sh 'echo ${dockerpwd} | docker login -u ${user} --password-stdin'
                     }
                     def services = ['user-service', 'product-service', 'order-service']
