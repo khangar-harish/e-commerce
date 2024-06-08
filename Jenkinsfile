@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     def services = ['user-service', 'product-service', 'order-service']
-                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                    docker.withRegistry('https://registry.hub.docker.com/', DOCKER_CREDENTIALS_ID) {
                         for (service in services) {
                             sh "docker push ${DOCKER_IMAGE}-${service}:latest"
                         }
