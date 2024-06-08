@@ -51,13 +51,13 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // withCredentials([string(credentialsId: 'DockeHub', passwordVariable: 'dockerpwd', userVariable: 'user')]) {
-                    //     sh 'echo ${dockerpwd} | docker login -u ${user} --password-stdin'
-                    // }
-                    // def services = ['user-service', 'product-service', 'order-service']
-                    // for (service in services) {
-                    //     sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    // }
+                    withCredentials([string(credentialsId: 'DockeHub', variable: 'dockerpwd')]) {
+                        sh  'docker login -u khanhash1992 -p ${dockerpwd}'
+                    }
+                    def services = ['user-service', 'product-service', 'order-service']
+                    for (service in services) {
+                        sh "docker push ${DOCKER_IMAGE}-${service}:latest"
+                    }
 
                     // docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                     //     for (service in services) {
@@ -72,13 +72,13 @@ pipeline {
                     //     }
                     // }
 
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'pwd', usernameVariable: 'user')]) {
-                        sh 'echo ${pwd} | docker login -u ${user} --password-stdin'
-                    }
-                    def services = ['user-service', 'product-service', 'order-service']
-                    for (service in services) {
-                        sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    }
+                    // withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'pwd', usernameVariable: 'user')]) {
+                    //     sh 'echo ${pwd} | docker login -u ${user} --password-stdin'
+                    // }
+                    // def services = ['user-service', 'product-service', 'order-service']
+                    // for (service in services) {
+                    //     sh "docker push ${DOCKER_IMAGE}-${service}:latest"
+                    // }
                 }
             }
         }
