@@ -68,7 +68,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
                         def services = ['user-service', 'product-service', 'order-service']
                         for (service in services) {
-                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=$kubeconfig"
+                            sh '''kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=$kubeconfig'''
                         }
                     }
                     // def services = ['user-service', 'product-service', 'order-service']
