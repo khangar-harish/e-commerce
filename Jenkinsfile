@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        //DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         DOCKER_IMAGE = 'khanhash1992/e-commerce'
         KUBE_CONFIG = credentials('kubeconfig')
     }
@@ -51,19 +51,26 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'DockeHub', passwordVariable: 'dockerpwd', userVariable: 'user')]) {
-                        sh 'echo ${dockerpwd} | docker login -u ${user} --password-stdin'
-                    }
-                    def services = ['user-service', 'product-service', 'order-service']
-                    for (service in services) {
-                        sh "docker push ${DOCKER_IMAGE}-${service}:latest"
-                    }
+                    // withCredentials([string(credentialsId: 'DockeHub', passwordVariable: 'dockerpwd', userVariable: 'user')]) {
+                    //     sh 'echo ${dockerpwd} | docker login -u ${user} --password-stdin'
+                    // }
+                    // def services = ['user-service', 'product-service', 'order-service']
+                    // for (service in services) {
+                    //     sh "docker push ${DOCKER_IMAGE}-${service}:latest"
+                    // }
 
                     // docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                     //     for (service in services) {
                     //         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
                     //     }
                     // }
+
+                    withDockerRegistry(credentialsId: DOCKER_CREDENTIALS_ID) {
+                        def services = ['user-service', 'product-service', 'order-service']
+                        for (service in services) {
+                            sh "docker push ${DOCKER_IMAGE}-${service}:latest"
+                        }
+                    }
                 }
             }
         }
