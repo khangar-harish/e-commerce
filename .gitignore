@@ -29,7 +29,7 @@ ehthumbs.db
 /docker-compose.override.yml
 
 # Kubernetes
-/k8s/
+#/k8s/
 
 # Node
 node_modules/
