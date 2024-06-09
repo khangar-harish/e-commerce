@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
-                        sh "kubectl apply -f mysql-deployment.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-service-deployment.yaml --kubeconfig=${kubeconfig}"
                     }
                 }
             }
