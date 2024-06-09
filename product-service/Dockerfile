@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk
 WORKDIR /app
 COPY "target/product-service.jar" "product-service.jar"
 EXPOSE 8082

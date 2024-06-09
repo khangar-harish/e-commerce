@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk
 WORKDIR /app
 COPY "target/user-service.jar" "user-service.jar"
 EXPOSE 8081

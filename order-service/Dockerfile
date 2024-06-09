@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk
 WORKDIR /app
 COPY "target/order-service.jar" "order-service.jar"
 EXPOSE 8083
