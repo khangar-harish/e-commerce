@@ -62,6 +62,16 @@ pipeline {
             }
         }
 
+        stage('Deploy MySQL to Kubernetes') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
+                        sh "kubectl apply -f mysql-deployment.yaml --kubeconfig=${kubeconfig}"
+                    }
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {
