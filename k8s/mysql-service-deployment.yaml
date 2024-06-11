@@ -1,33 +1,77 @@
+# Define a 'Persistent Voulume Claim'(PVC) for Mysql Storage, dynamically provisioned by cluster
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim # name of PVC essential for identifying the storage data
+  labels:
+    app: mysql-service
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce   #This specifies the mode of the claim that we are trying to create.
+  resources:
+    requests:
+      storage: 1Gi    #This will tell kubernetes about the amount of space we are trying to claim.
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-service-deployment
+  labels: 
+    app: mysql-service
+    tier: database
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: mysql-service
+      tier: database
   template:
     metadata:
       labels:
         app: mysql-service
+        tier: database
     spec:
       containers:
       - name: mysql-service
         image: mysql:latest
         env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: root
-        ports:
-        - containerPort: 3306
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom :
+              secretKeyRef :
+                name : mysql-secrets
+                key :  password
+
+          - name: MYSQL_DATABASE # Setting Database Name from a 'ConfigMap'
+            valueFrom :
+              configMapKeyRef :
+                name : db-config
+                key :  dbName
+         ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
+      volumes:
+        - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service
-spec:
-  selector:
+  labels:
     app: mysql-service
+    tier: database
+spec:
+  selector:       # mysql Pod Should contain same labels
+    app: mysql-service
+    tier: database
+  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
   ports:
     - protocol: TCP
       port: 3306
+      targetPort: 3306

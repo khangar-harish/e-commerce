@@ -62,32 +62,38 @@ pipeline {
             }
         }
 
-        stage('Deploy MySQL to Kubernetes') {
+        stage('Deploy Services to Kubernetes') {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
-                        sh "kubectl apply -f k8s/mysql-service-deployment.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-configMap.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-secrets.yaml --kubeconfig=${kubeconfig}"
+                        def services = ['user-service', 'product-service', 'order-service']
+                        for (service in services) {
+                            sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
+                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=${kubeconfig}"
+                        }
                     }
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
-                        def services = ['user-service', 'product-service', 'order-service']
-                        for (service in services) {
-                            sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=${kubeconfig}"
-                        }
-                    }
-                    // def services = ['user-service', 'product-service', 'order-service']
-                    // for (service in services) {
-                    //     sh "kubectl set image deployment/${service}-deployment ${service}=${DOCKER_IMAGE}-${service}:latest --kubeconfig=${KUBE_CONFIG}"
-                    // }
-                }
-            }
-        }
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         script {
+        //             withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
+        //                 def services = ['user-service', 'product-service', 'order-service']
+        //                 for (service in services) {
+        //                     sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=${kubeconfig}"
+        //                 }
+        //             }
+        //             // def services = ['user-service', 'product-service', 'order-service']
+        //             // for (service in services) {
+        //             //     sh "kubectl set image deployment/${service}-deployment ${service}=${DOCKER_IMAGE}-${service}:latest --kubeconfig=${KUBE_CONFIG}"
+        //             // }
+        //         }
+        //     }
+        // }
     }
 
     //  post {
