@@ -27,7 +27,7 @@ spec:
         app: user-service-mysql
     spec:
       containers:
-      - name: mysql
+      - name: user-mysql
         image: mysql:latest
         env:
         - name: MYSQL_ROOT_PASSWORD

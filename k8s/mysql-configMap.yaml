@@ -18,6 +18,6 @@ data:
     CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
     GRANT ALL PRIVILEGES ON order_service_db.* TO 'username'@'%';
     FLUSH PRIVILEGES;
-  user-service-db-url: jdbc:mysql://user-service-mysql/user_service_db
-  product-service-db-url: jdbc:mysql://product-service-mysql/product_service_db
-  order-service-db-url: jdbc:mysql://order-service-mysql/order_service_db
+  # user-service-db-url: jdbc:mysql://user-service-mysql/user_service_db
+  # product-service-db-url: jdbc:mysql://product-service-mysql/product_service_db
+  # order-service-db-url: jdbc:mysql://order-service-mysql/order_service_db
