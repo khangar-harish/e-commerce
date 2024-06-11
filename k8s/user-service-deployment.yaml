@@ -19,18 +19,18 @@ spec:
         ports:
         - containerPort: 8081
         env:
-        - name: SPRING_DATASOURCE_URL
-          value: jdbc:mysql://user-service-mysql/user_service_db
-        - name: SPRING_DATASOURCE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secrets
-              key: user-service-db-username
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secrets
-              key: user-service-db-password
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mysql://user-service-mysql:3306/user_service_db
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secrets
+                key: user-service-db-username
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secrets
+                key: user-service-db-password
 ---
 apiVersion: v1
 kind: Service
