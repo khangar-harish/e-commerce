@@ -39,16 +39,6 @@ pipeline {
                         retry(3) {
                             sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
                         }
-
-                        // Check for pod status and describe if failed
-                        try {
-                            sh "kubectl rollout status deployment/user-service-mysql --timeout=60s --kubeconfig=${kubeconfig}"
-                        } catch (Exception e) {
-                            echo 'Deployment failed, describing pods:'
-                            sh "kubectl describe pod --selector=app=user-service-mysql --kubeconfig=${kubeconfig}"
-                            sh "kubectl logs $(kubectl get pods --selector=app=user-service-mysql -o jsonpath='{.items[0].metadata.name}') --kubeconfig=${kubeconfig}"
-                            error 'MySQL Deployment failed'
-                        }
                     }
                 }
             }
@@ -107,28 +97,11 @@ pipeline {
                 }
             }
         }
-
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         script {
-        //             withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
-        //                 def services = ['user-service', 'product-service', 'order-service']
-        //                 for (service in services) {
-        //                     sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=${kubeconfig}"
-        //                 }
-        //             }
-        //             // def services = ['user-service', 'product-service', 'order-service']
-        //             // for (service in services) {
-        //             //     sh "kubectl set image deployment/${service}-deployment ${service}=${DOCKER_IMAGE}-${service}:latest --kubeconfig=${KUBE_CONFIG}"
-        //             // }
-        //         }
-        //     }
-        // }
     }
 
-    //  post {
-    //     always {
-    //         cleanWs()
-    //     }
-    // }
+     post {
+        always {
+            cleanWs()
+        }
+    }
 }
