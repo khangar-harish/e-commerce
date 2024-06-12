@@ -36,8 +36,19 @@ pipeline {
                             sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
                         }
                         
-                        // Wait for MySQL pod to be running
-                        sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
+                        retry(3) {
+                            sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
+                        }
+
+                        // Check for pod status and describe if failed
+                        try {
+                            sh "kubectl rollout status deployment/user-service-mysql --timeout=60s --kubeconfig=${kubeconfig}"
+                        } catch (Exception e) {
+                            echo 'Deployment failed, describing pods:'
+                            sh "kubectl describe pod --selector=app=user-service-mysql --kubeconfig=${kubeconfig}"
+                            sh "kubectl logs $(kubectl get pods --selector=app=user-service-mysql -o jsonpath='{.items[0].metadata.name}') --kubeconfig=${kubeconfig}"
+                            error 'MySQL Deployment failed'
+                        }
                     }
                 }
             }
