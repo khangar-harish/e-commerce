@@ -57,3 +57,20 @@ spec:
       - name: initdb
         configMap:
           name: mysql-initdb-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-mysql
+  labels:
+    app: user-service-mysql
+    tier: database
+spec:
+  selector:       # mysql Pod Should contain same labels
+    app: user-service-mysql
+    tier: database
+  clusterIP: None  # We Use DNS, Thus ClusterIP is not relevant
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
