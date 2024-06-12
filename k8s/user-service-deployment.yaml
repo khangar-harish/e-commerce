@@ -19,8 +19,16 @@ spec:
         ports:
         - containerPort: 8081
         env:
-        - name: SPRING_DATASOURCE_URL
-          value: jdbc:mysql://mysql/user_service_db
+        - name: SPRING_DATASOURCE_DB_HOST   # Setting Database host address from configMap
+          valueFrom:
+            configMapKeyRef :
+              name: mysql-initdb-config
+              key: host
+        - name: SPRING_DATASOURCE_DB_NAME  # Setting Database name from configMap
+          valueFrom:
+            configMapKeyRef :
+              name: mysql-initdb-config
+              key: user-service-db-name
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
