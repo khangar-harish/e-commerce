@@ -25,6 +25,7 @@ spec:
     metadata:
       labels:
         app: order-service-mysql
+        tier: database
     spec:
       containers:
       - name: order-mysql
@@ -36,7 +37,10 @@ spec:
               name: mysql-secrets
               key: mysql-root-password
         - name: MYSQL_DATABASE
-          value: order_service_db
+          valueFrom :
+            configMapKeyRef :
+              name : mysql-initdb-config
+              key :  order-service-db-name
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
@@ -49,14 +53,14 @@ spec:
               key: order-service-db-password
         ports:
         - containerPort: 3306
-        volumeMounts:
-        - name: initdb
-          mountPath: /docker-entrypoint-initdb.d
-          subPath: init-order-db.sql
+          name: order-mysql
+        volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
       volumes:
-      - name: initdb
-        configMap:
-          name: mysql-initdb-config
+      - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
+        persistentVolumeClamyim:
+          claimName: mysql-pv-claim
 ---
 apiVersion: v1
 kind: Service

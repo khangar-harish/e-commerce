@@ -11,7 +11,7 @@ spec:
     - ReadWriteOnce   #This specifies the mode of the claim that we are trying to create.
   resources:
     requests:
-      storage: 1Gi    #This will tell kubernetes about the amount of space we are trying to claim.
+      storage: 200Mi    #This will tell kubernetes about the amount of space we are trying to claim.
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,7 +25,6 @@ spec:
   selector:
     matchLabels:
       app: mysql-service
-      tier: database
   template:
     metadata:
       labels:
@@ -36,27 +35,27 @@ spec:
       - name: mysql-service
         image: mysql:latest
         env:
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom :
-              secretKeyRef :
-                name : mysql-secrets
-                key :  password
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom :
+            secretKeyRef :
+              name : mysql-secrets
+              key :  mysql-root-password
 
-          - name: MYSQL_DATABASE # Setting Database Name from a 'ConfigMap'
-            valueFrom :
-              configMapKeyRef :
-                name : db-config
-                key :  dbName
-         ports:
-            - containerPort: 3306
-              name: mysql
-          volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
+        - name: MYSQL_DATABASE # Setting Database Name from a 'ConfigMap'
+          valueFrom :
+            configMapKeyRef :
+              name : mysql-initdb-config
+              key :  dbName
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
       volumes:
-        - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
-          persistentVolumeClaim:
-            claimName: mysql-pv-claim
+      - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
 
 ---
 apiVersion: v1
