@@ -37,10 +37,7 @@ pipeline {
                         }
                         
                         // Wait for MySQL pod to be running
-                        sh """
-                            kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig} \
-                            && kubectl get pods --selector=app=user-service-mysql --kubeconfig=${kubeconfig}
-                        """
+                        sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
                     }
                 }
             }
