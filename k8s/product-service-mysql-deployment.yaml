@@ -37,10 +37,10 @@ spec:
               name: mysql-secrets
               key: mysql-root-password
         - name: MYSQL_DATABASE
-          valueFrom :
-            configMapKeyRef :
-              name : mysql-initdb-config
-              key :  product-service-db-name
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-initdb-config
+              key:  product-service-db-name
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
