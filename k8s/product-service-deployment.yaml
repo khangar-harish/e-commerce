@@ -20,7 +20,7 @@ spec:
         - containerPort: 8082
         env:
           - name: SPRING_DATASOURCE_URL
-            value: jdbc:mysql://product-mysql:3306/product_service_db
+            value: jdbc:mysql://user-service-mysql:3306/product_service_db
           - name: SPRING_DATASOURCE_USERNAME
             valueFrom:
               secretKeyRef:
