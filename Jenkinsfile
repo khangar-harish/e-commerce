@@ -36,9 +36,9 @@ pipeline {
                             sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
                         }
                         
-                        retry(3) {
-                            sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
-                        }
+                        // retry(3) {
+                        //     sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
+                        // }
                     }
                 }
             }
