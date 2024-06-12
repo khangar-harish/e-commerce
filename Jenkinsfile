@@ -50,6 +50,7 @@ pipeline {
                     def services = ['user-service', 'product-service', 'order-service']
                     for (service in services) {
                         dir(service) {
+                            sh 'printenv'
                             sh 'mvn clean install'
                         }
                     }
