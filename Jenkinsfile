@@ -22,6 +22,30 @@ pipeline {
             }
         }
 
+        stage('Deploy MySQL') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
+                        // Apply ConfigMaps and Secrets for MySQL
+                        sh "kubectl apply -f k8s/mysql-configMap.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-secrets.yaml --kubeconfig=${kubeconfig}"
+                        
+                        // Deploy MySQL
+                        def services = ['user-service', 'product-service', 'order-service']
+                        for (service in services) {
+                            sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
+                        }
+                        
+                        // Wait for MySQL pod to be running
+                        sh """
+                            kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig} \
+                            && kubectl get pods --selector=app=user-service-mysql --kubeconfig=${kubeconfig}
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Build and Test') {
             steps {
                 script {
