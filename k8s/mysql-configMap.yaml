@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: mysql-initdb-config
 data:
-  host : mysql
+  user-host: user-service-mysql
+  product-host: product-service-mysql
+  order-host: order-service-mysql
   dbName: mysql-db
   user-service-db-name: user_service_db
   product-service-db-name: product_service_db

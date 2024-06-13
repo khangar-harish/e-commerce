@@ -23,7 +23,7 @@ spec:
           valueFrom:
             configMapKeyRef :
               name: mysql-initdb-config
-              key: host
+              key: user-host
         - name: SPRING_DATASOURCE_DB_NAME  # Setting Database name from configMap
           valueFrom:
             configMapKeyRef :
