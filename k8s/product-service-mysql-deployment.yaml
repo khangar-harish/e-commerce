@@ -36,6 +36,11 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: mysql-root-password
+        - name: MYSQL_DB_HOST   # Setting Database host address from configMap
+          valueFrom:
+            configMapKeyRef :
+              name: mysql-initdb-config
+              key: product-host
         - name: MYSQL_DATABASE
           valueFrom:
             configMapKeyRef:
