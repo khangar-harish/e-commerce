@@ -35,10 +35,6 @@ pipeline {
                         for (service in services) {
                             sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
                         }
-                        
-                        // retry(3) {
-                        //     sh "kubectl rollout status deployment/user-service-mysql --kubeconfig=${kubeconfig}"
-                        // }
                     }
                 }
             }
@@ -51,7 +47,7 @@ pipeline {
                     for (service in services) {
                         dir(service) {
                             sh 'printenv'
-                            sh 'mvn clean install'
+                            sh ' mvn clean package -DskipTests'
                         }
                     }
                 }
@@ -61,7 +57,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    def services = ['user-service', 'product-service', 'order-service']
+                    def services = ['user-service', 'product-service', 'order-service', 'eureka-server', 'api-gateway']
                     for (service in services) {
                         dir(service) {
                             sh "docker build -t ${DOCKER_IMAGE}-${service}:latest ."
@@ -77,7 +73,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'DockeHub', variable: 'dockerpwd')]) {
                         sh 'echo $dockerpwd | docker login -u khanhash1992 --password-stdin'
                     }
-                    def services = ['user-service', 'product-service', 'order-service']
+                    def services = ['user-service', 'product-service', 'order-service', 'eureka-server', 'api-gateway']
                     for (service in services) {
                         sh "docker push ${DOCKER_IMAGE}-${service}:latest"
                     }
@@ -89,9 +85,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
-                        def services = ['user-service', 'product-service', 'order-service']
+                        def services = ['user-service', 'product-service', 'order-service', 'eureka-server', 'api-gateway']
                         for (service in services) {
-                            sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
                             sh "kubectl apply -f k8s/${service}-deployment.yaml --kubeconfig=${kubeconfig}"
                         }
                     }

@@ -19,12 +19,13 @@ spec:
         ports:
         - containerPort: 8081
         env:
-        - name: SPRING_DATASOURCE_URL  # Setting Database name from configMap
+        - name: SPRING_DATASOURCE_DB_HOST   # Setting Database host address from configMap
           valueFrom:
-            configMapKeyRef:
+            configMapKeyRef :
               name: mysql-initdb-config
-              key: user-db-url
-          #value: jdbc:mysql://user-service-mysql:3306/user_service_db?allowPublicKeyRetrieval=true&useSSL=false
+              key: user-host
+        - name: SPRING_DATASOURCE_DB_NAME  # Setting Database name from configMap
+          value: jdbc:mysql://user-service-mysql:3306/user_service_db?allowPublicKeyRetrieval=true&useSSL=false
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
@@ -47,4 +48,4 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-  type: ClusterIP
+  type: NodePort

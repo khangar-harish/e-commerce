@@ -19,16 +19,11 @@ spec:
         ports:
         - containerPort: 8083
         env:
-        - name: SPRING_DATASOURCE_DB_HOST   # Setting Database host address from configMap
+        - name: SPRING_DATASOURCE_URL  # Setting Database name from configMap
           valueFrom:
-            configMapKeyRef :
+            configMapKeyRef:
               name: mysql-initdb-config
-              key: order-host
-        - name: SPRING_DATASOURCE_DB_NAME  # Setting Database name from configMap
-          valueFrom:
-            configMapKeyRef :
-              name: mysql-initdb-config
-              key: order-service-db-name
+              key: order-db-url
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
