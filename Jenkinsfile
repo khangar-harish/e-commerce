@@ -43,7 +43,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
-                    def services = ['user-service', 'product-service', 'order-service']
+                    def services = ['user-service', 'product-service', 'order-service', 'eureka-server', 'api-gateway']
                     for (service in services) {
                         dir(service) {
                             sh 'printenv'
