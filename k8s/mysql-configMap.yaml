@@ -3,13 +3,14 @@ kind: ConfigMap
 metadata:
   name: mysql-initdb-config
 data:
-  user-db-url: jdbc:mysql://user-service-mysql:3306/user_service_db?allowPublicKeyRetrieval=true&useSSL=false
-  product-db-url: jdbc:mysql://product-service-mysql:3306/product_service_db?allowPublicKeyRetrieval=true&useSSL=false
-  order-db-url: jdbc:mysql://order-service-mysql:3306/order_service_db?allowPublicKeyRetrieval=true&useSSL=false
-  
-  user-host: user-service-mysql
-  product-host: product-service-mysql
-  order-host: order-service-mysql
+  user-db-url: jdbc:mysql://mysql-service:3306/user_service_db?allowPublicKeyRetrieval=true&useSSL=false
+  product-db-url: jdbc:mysql://mysql-service:3306/product_service_db?allowPublicKeyRetrieval=true&useSSL=false
+  order-db-url: jdbc:mysql://mysql-service:3306/order_service_db?allowPublicKeyRetrieval=true&useSSL=false
+
+  mysql-host: mysql-service
+  #user-host: user-service-mysql
+  # product-host: product-service-mysql
+  # order-host: order-service-mysql
 
   user-service-db-name: user_service_db
   product-service-db-name: product_service_db

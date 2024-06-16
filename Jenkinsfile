@@ -29,12 +29,13 @@ pipeline {
                         // Apply ConfigMaps and Secrets for MySQL
                         sh "kubectl apply -f k8s/mysql-configMap.yaml --kubeconfig=${kubeconfig}"
                         sh "kubectl apply -f k8s/mysql-secrets.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-service-deployment.yaml --kubeconfig=${kubeconfig}"
                         
                         // Deploy MySQL
-                        def services = ['user-service', 'product-service', 'order-service']
-                        for (service in services) {
-                            sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
-                        }
+                        // def services = ['user-service', 'product-service', 'order-service']
+                        // for (service in services) {
+                        //     sh "kubectl apply -f k8s/${service}-mysql-deployment.yaml --kubeconfig=${kubeconfig}"
+                        // }
                     }
                 }
             }
