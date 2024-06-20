@@ -10,8 +10,6 @@ data:
     CREATE DATABASE IF NOT EXISTS order_service_db;
 
     CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_USER_PASSWORD}';
-    CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_PRODUCT_PASSWORD}';
-    CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_ORDER_PASSWORD}';
 
     GRANT ALL PRIVILEGES ON user_service_db.* TO 'springstudent'@'%';
     GRANT ALL PRIVILEGES ON product_service_db.* TO 'springstudent'@'%';

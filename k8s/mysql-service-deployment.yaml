@@ -40,17 +40,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mysql-secrets
-              key: user-service-db-password
-        - name: MYSQL_PRODUCT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secrets
-              key: product-service-db-password
-        - name: MYSQL_ORDER_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secrets
-              key: order-service-db-password
+              key: mysql-service-db-password
         ports:
         - containerPort: 3306
           name: mysql-container
