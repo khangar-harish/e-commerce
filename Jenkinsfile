@@ -27,8 +27,8 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'kubeconfig')]) {
                         // Apply ConfigMaps and Secrets for MySQL
-                        sh "kubectl apply -f k8s/mysql-configMap.yaml --kubeconfig=${kubeconfig}"
                         sh "kubectl apply -f k8s/mysql-secrets.yaml --kubeconfig=${kubeconfig}"
+                        sh "kubectl apply -f k8s/mysql-configMap.yaml --kubeconfig=${kubeconfig}"
                         sh "kubectl apply -f k8s/mysql-service-deployment.yaml --kubeconfig=${kubeconfig}"
                         
                         // Deploy MySQL
