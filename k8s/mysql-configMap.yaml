@@ -3,34 +3,51 @@ kind: ConfigMap
 metadata:
   name: mysql-initdb-config
 data:
+
+  init-multiple-dbs.sql: |
+    CREATE DATABASE IF NOT EXISTS user_service_db;
+    CREATE DATABASE IF NOT EXISTS product_service_db;
+    CREATE DATABASE IF NOT EXISTS order_service_db;
+
+    CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_USER_PASSWORD}';
+    CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_PRODUCT_PASSWORD}';
+    CREATE USER 'springstudent'@'%' IDENTIFIED BY '${MYSQL_ORDER_PASSWORD}';
+
+    GRANT ALL PRIVILEGES ON user_service_db.* TO 'springstudent'@'%';
+    GRANT ALL PRIVILEGES ON product_service_db.* TO 'springstudent'@'%';
+    GRANT ALL PRIVILEGES ON order_service_db.* TO 'springstudent'@'%';
+
+    FLUSH PRIVILEGES;
+  # init-user-db.sql: |
+  #   CREATE DATABASE IF NOT EXISTS user_service_db;
+  #   CREATE USER IF NOT EXISTS 'springstudent'@'%' IDENTIFIED BY 'springstudent';
+  #   GRANT ALL PRIVILEGES ON user_service_db.* TO 'springstudent'@'%';
+  #   FLUSH PRIVILEGES;
+  # init-product-db.sql: |
+  #   CREATE DATABASE IF NOT EXISTS product_service_db;
+  #   CREATE USER IF NOT EXISTS 'springstudent'@'%' IDENTIFIED BY 'springstudent';
+  #   GRANT ALL PRIVILEGES ON product_service_db.* TO 'springstudent'@'%';
+  #   FLUSH PRIVILEGES;
+  # init-order-db.sql: |
+  #   CREATE DATABASE IF NOT EXISTS order_service_db;
+  #   CREATE USER IF NOT EXISTS 'springstudent'@'%' IDENTIFIED BY 'springstudent';
+  #   GRANT ALL PRIVILEGES ON order_service_db.* TO 'springstudent'@'%';
+  #   FLUSH PRIVILEGES;
+
   user-db-url: jdbc:mysql://mysql-service:3306/user_service_db?allowPublicKeyRetrieval=true&useSSL=false
   product-db-url: jdbc:mysql://mysql-service:3306/product_service_db?allowPublicKeyRetrieval=true&useSSL=false
   order-db-url: jdbc:mysql://mysql-service:3306/order_service_db?allowPublicKeyRetrieval=true&useSSL=false
 
   mysql-host: mysql-service
+  # mysql-service-db-name: user_service_db
   #user-host: user-service-mysql
   # product-host: product-service-mysql
   # order-host: order-service-mysql
 
-  user-service-db-name: user_service_db
-  product-service-db-name: product_service_db
-  order-service-db-name: order_service_db
+  # user-service-db-name: user_service_db
+  # product-service-db-name: product_service_db
+  # order-service-db-name: order_service_db
 
-  # init-user-db.sql: |
-  #   CREATE DATABASE IF NOT EXISTS user_service_db;
-  #   CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
-  #   GRANT ALL PRIVILEGES ON user_service_db.* TO 'username'@'%';
-  #   FLUSH PRIVILEGES;
-  # init-product-db.sql: |
-  #   CREATE DATABASE IF NOT EXISTS product_service_db;
-  #   CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
-  #   GRANT ALL PRIVILEGES ON product_service_db.* TO 'username'@'%';
-  #   FLUSH PRIVILEGES;
-  # init-order-db.sql: |
-  #   CREATE DATABASE IF NOT EXISTS order_service_db;
-  #   CREATE USER IF NOT EXISTS 'username'@'%' IDENTIFIED BY 'password';
-  #   GRANT ALL PRIVILEGES ON order_service_db.* TO 'username'@'%';
-  #   FLUSH PRIVILEGES;
   # user-service-db-url: jdbc:mysql://user-service-mysql/user_service_db
   # product-service-db-url: jdbc:mysql://product-service-mysql/product_service_db
   # order-service-db-url: jdbc:mysql://order-service-mysql/order_service_db

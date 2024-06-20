@@ -28,12 +28,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mysql-secrets
-              key: mysql-service-db-username
+              key: product-service-db-username
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secrets
-              key: mysql-service-db-password
+              key: product-service-db-password
 ---
 apiVersion: v1
 kind: Service

@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Mi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,33 +36,33 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: mysql-root-password
-        - name: MYSQL_DB_HOST   # Setting Database host address from configMap
+        - name: MYSQL_USER_PASSWORD
           valueFrom:
-            configMapKeyRef :
-              name: mysql-initdb-config
-              key: mysql-host
-        # - name: MYSQL_DATABASE
-        #   valueFrom :
-        #     configMapKeyRef :
-        #       name: mysql-initdb-config
-        #       key:  mysql-service-db-name
-        # - name: MYSQL_USER
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: mysql-secrets
-        #       key: mysql-service-db-username
-        # - name: MYSQL_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: mysql-secrets
-        #       key: mysql-service-db-password
+            secretKeyRef:
+              name: mysql-secrets
+              key: user-service-db-password
+        - name: MYSQL_PRODUCT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: product-service-db-password
+        - name: MYSQL_ORDER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: order-service-db-password
         ports:
         - containerPort: 3306
           name: mysql-container
         volumeMounts:        # Mounting voulume obtained from Persistent Volume Claim
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql #This is the path in the container on which the mounting will take place.
       volumes:
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
       - name: mysql-persistent-storage # Obtaining 'vloume' from PVC
         persistentVolumeClaim:
           claimName: mysql-pv-claim
