@@ -35,4 +35,5 @@ spec:
     - protocol: TCP
       port: 8761
       targetPort: 8761
-  type: LoadBalancer
+      nodePort: 30001
+  type: NodePort
