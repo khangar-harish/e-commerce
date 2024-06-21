@@ -21,6 +21,8 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes
+        - name: EUREKA_SERVER_URL
+          value: "http://eureka-server:8761/eureka/"
 ---
 apiVersion: v1
 kind: Service
